@@ -1,6 +1,9 @@
+import os
 import zipfile
 
-def archive(archiveFilename, arhivedFile, mode='w'):
+from PIL import Image
+
+def archive(archiveFilename: str, arhivedFile: str, mode:str ='w') -> str or None:
     modes = ['a', 'w']
     if mode in modes:
         try:
@@ -14,7 +17,7 @@ def archive(archiveFilename, arhivedFile, mode='w'):
     else:
         return None
 
-def dearchive(archiveFilename, exctractDirectory):
+def dearchive(archiveFilename: str, exctractDirectory: str = '') -> str or None:
     try:
         archiveFile = zipfile.ZipFile(archiveFilename, 'r')
         archiveFile.extractall(exctractDirectory)
