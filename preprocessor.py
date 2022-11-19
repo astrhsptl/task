@@ -1,22 +1,26 @@
+import os
 import cv2
 import numpy as np
+from PIL import Image
 
-def getImageMask(imagePath,):
-    image = cv2.imread(imagePath)
-    mask = np.ones(image.shape, dtype=np.uint8) * 255
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)[1]
-    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (2,2))
-    dilate = cv2.dilate(thresh, kernel, iterations=5)
+from filters import (
+    negativeImageFilter, lightingImage, 
+    grayFilter, maskFilter)
 
-    cnts = cv2.findContours(dilate, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-    cnts = cnts[0] if len(cnts) == 2 else cnts[1]
+def getPreprocessedImage(imagePath: str, sideEffectImages: str or bool) -> np.array:
+    img = np.array(Image.open(imagePath))
 
+    if np.mean(img) < 145.0:
+        img = lightingImage(img, 0.2) 
+        saved = Image.fromarray(img).save(os.path.join(sideEffectImages, 'lightner.jpg')) if sideEffectImages else 0
 
-    for c in cnts:
-        area = cv2.contourArea(c)
-        if area < 80000:
-            x,y,w,h = cv2.boundingRect(c)
-            mask[y:y+h, x:x+w] = image[y:y+h, x:x+w]
+    elif np.mean(img) < 155.0:
+        img = maskFilter(img)
+        saved = Image.fromarray(img).save(os.path.join(sideEffectImages, 'masked.jpg')) if sideEffectImages else 0
+        
+    img = negativeImageFilter(img)
+    saved = Image.fromarray(img).save(os.path.join(sideEffectImages, 'neg.jpg')) if sideEffectImages else 0
     
-    return mask
+    final = grayFilter(img)
+    
+    return final
