@@ -1,7 +1,4 @@
-import os
 import zipfile
-
-from PIL import Image
 
 def archive(archiveFilename: str, arhivedFile: str, mode:str ='w') -> str or None:
     modes = ['a', 'w']

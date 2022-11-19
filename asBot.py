@@ -5,7 +5,7 @@ from telebot.async_telebot import AsyncTeleBot
 
 from preprocessor import getPreprocessedImage
 
-token = '5939461261:AAG13zKhpMhF3XQ-jGhZKK6k2Se44182Ovw'
+token = ''
 
 bot = AsyncTeleBot(token)
 

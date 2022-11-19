@@ -1,9 +1,3 @@
-'''
-1) get image
-2) preprocessing image
-3) save image
-'''
-
 from PIL import Image
 
 from compressor import archive
