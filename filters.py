@@ -55,9 +55,9 @@ def grayFilter(image: np.array) -> np.array:
     for i in range(image.shape[1]):
         for j in range(image.shape[0]):
             if image[j][i] < 50:
-                image[j][i] = 0
-            else:
                 image[j][i] = 255
+            else:
+                image[j][i] = 0
     
     return image 
 
