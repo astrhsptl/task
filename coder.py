@@ -7,8 +7,14 @@ from preprocessor import getPreprocessedImage
 def main():
     imageName = input('Just enter the image name here please =) (!full path): ')
     archiveName = input('Enter archive name, please =): ')
-    intermadiate = True if input('Enter, please: ').capitalize().strip() == 'Y'  else False
     print('''Just wait)))''')
-    Image.fromarray(getPreprocessedImage(imageName, intermadiate)).save(imageName)
+    Image.fromarray(getPreprocessedImage(imageName, False)).save(imageName)
     archive(archiveName, imageName)
     print('Have a good day =)')
+
+def coder(archiveName, imageName):
+    Image.fromarray(getPreprocessedImage(imageName, False)).save(imageName)
+    archive(archiveName, imageName)
+
+if __name__ == "__main__":
+    main()

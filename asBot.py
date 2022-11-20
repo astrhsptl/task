@@ -13,8 +13,14 @@ bot = AsyncTeleBot(token)
 @bot.message_handler(commands=['help', 'start'])
 async def send_welcome(message):
     await bot.reply_to(message, """\
-Привет) Я - бот комадны FV 3R&1B).
-Вышли мне картинку с текстом).
+Я - бот комадны FV 3R&1B).
+Пришлите мне картинку с текстом).
+""")
+
+@bot.message_handler(commands=['help'])
+async def send_help(message):
+    await bot.reply_to(message, """\
+Пришлите мне картинку с текстом).
 """)
 
 @bot.message_handler(content_types=['photo'])
@@ -43,6 +49,6 @@ async def handle_photo(message):
     except:
         await bot.send_message(message.from_user.id, '''\
 Что-то с изображением не то (''')
-        await os.remove(imageName)
+        os.remove(imageName)
 
 asyncio.run(bot.polling(non_stop=True)) 

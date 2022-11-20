@@ -57,8 +57,7 @@ def grayFilter(image: np.array) -> np.array:
             if image[j][i] < 45:
                 image[j][i] = 255
             else:
-                image[j][i] = 0
-    
+                image[j][i] = 0    
     return image 
 
 
@@ -75,6 +74,5 @@ def negativeImageFilter(mask: np.array) -> np.array:
         for j in range(y):
             r, g, b = pixels[i, j]
             pixels[i, j] =  200-r,  200-g , 200-b
-
 
     return np.array(image)
