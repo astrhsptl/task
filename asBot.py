@@ -20,6 +20,10 @@ async def send_welcome(message):
 @bot.message_handler(content_types=['photo'])
 async def handle_photo(message):
     try:
+        os.mkdir('tempFiles')
+    except:
+        print('file exist')
+    try:
         file_info = (await bot.get_file(message.photo[-1].file_id)).file_path
         downloaded_file = (await bot.download_file(file_info))
     
