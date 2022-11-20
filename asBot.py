@@ -3,10 +3,10 @@ import asyncio
 from PIL import Image
 from telebot.async_telebot import AsyncTeleBot
 
+from compressor import archive, dearchive 
 from preprocessor import getPreprocessedImage
 
 token = ''
-
 bot = AsyncTeleBot(token)
 
 
@@ -21,11 +21,19 @@ async def send_welcome(message):
 async def handle_photo(message):
     file_info = (await bot.get_file(message.photo[-1].file_id)).file_path
     downloaded_file = (await bot.download_file(file_info))
-    fileName = f'tempFiles/{message.photo[-1].file_id}.jpg'
-    f = open(fileName, 'wb').write(downloaded_file)
-    Image.fromarray(getPreprocessedImage(fileName, False)).save(fileName)
-    img = open(fileName, 'rb')
+    
+    imageName = f'tempFiles/{message.photo[-1].file_id}.jpg'
+    archiveName = f'tempFiles/{message.photo[-1].file_id}.zip'
+    
+    f = open(imageName, 'wb').write(downloaded_file)
+    Image.fromarray(getPreprocessedImage(imageName, False)).save(imageName)
+    
+    archive(archiveName, {imageName})
+    dearchive(archiveName, 'tempFiles/')
+
+    img = open(imageName, 'rb')
     await bot.send_photo(message.from_user.id, img)
-    await os.remove(fileName)
+    os.remove(imageName)
+    os.remove(archiveName)
 
 asyncio.run(bot.polling(non_stop=True)) 
