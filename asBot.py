@@ -6,7 +6,7 @@ from telebot.async_telebot import AsyncTeleBot
 from compressor import archive, dearchive 
 from preprocessor import getPreprocessedImage
 
-token = ''
+token = '5939461261:AAG13zKhpMhF3XQ-jGhZKK6k2Se44182Ovw'
 bot = AsyncTeleBot(token)
 
 
@@ -19,21 +19,26 @@ async def send_welcome(message):
 
 @bot.message_handler(content_types=['photo'])
 async def handle_photo(message):
-    file_info = (await bot.get_file(message.photo[-1].file_id)).file_path
-    downloaded_file = (await bot.download_file(file_info))
+    try:
+        file_info = (await bot.get_file(message.photo[-1].file_id)).file_path
+        downloaded_file = (await bot.download_file(file_info))
     
-    imageName = f'tempFiles/{message.photo[-1].file_id}.jpg'
-    archiveName = f'tempFiles/{message.photo[-1].file_id}.zip'
+        imageName = f'tempFiles/{message.photo[-1].file_id}.jpg'
+        archiveName = f'tempFiles/{message.photo[-1].file_id}.zip'
     
-    f = open(imageName, 'wb').write(downloaded_file)
-    Image.fromarray(getPreprocessedImage(imageName, False)).save(imageName)
+        f = open(imageName, 'wb').write(downloaded_file)
+        Image.fromarray(getPreprocessedImage(imageName, False)).save(imageName)
     
-    archive(archiveName, {imageName})
-    dearchive(archiveName, 'tempFiles/')
+        archive(archiveName, {imageName})
+        dearchive(archiveName, 'tempFiles/')
 
-    img = open(imageName, 'rb')
-    await bot.send_photo(message.from_user.id, img)
-    os.remove(imageName)
-    os.remove(archiveName)
+        img = open(imageName, 'rb')
+        await bot.send_photo(message.from_user.id, img)
+        os.remove(imageName)
+        os.remove(archiveName)
+    except:
+        await bot.send_message(message.from_user.id, '''\
+Что-то с изображением не то (''')
+        await os.remove(imageName)
 
 asyncio.run(bot.polling(non_stop=True)) 
